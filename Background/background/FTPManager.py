@@ -20,6 +20,7 @@ import codecs
 
 # config_path = r'E:\projects\pycharm\NearGoos\background\byQY\config\Config.ini'
 class FTPManager:
+
     def __init__(self, config_path, section):
         self.config_path = config_path
         self.ftp = FTP()
