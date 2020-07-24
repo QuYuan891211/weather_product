@@ -61,7 +61,7 @@ class FTPManager:
         :return: 配置文件类
         """
         config = configparser.ConfigParser()
-        config.read(self.config_path)
+        config.read(self.config_path, encoding='UTF-8')
         return config
 
     def close_connect(self):
@@ -165,11 +165,11 @@ class FTPManager:
         if not os.path.isfile(local_file):
             # self.debug_print('%s 不存在' % local_file)
             print('不存在')
-            return
+            return False
         if self.is_same_size(local_file, remote_file):
             # self.debug_print('%s 文件大小相同，无需上传' % local_file)
             print('大小相同无需上传')
-            return
+            return False
 
         buff_size = 1024
 
@@ -177,7 +177,7 @@ class FTPManager:
         self.ftp.storbinary('STOR %s' % remote_file, file_handler, buff_size)
         file_handler.close()
         # self.debug_print('上传: %s' % local_file + "成功!")
-        print('上传成功')
+        return True
 
     # 获取年份
     def getCreateTime(self, remote_file):
