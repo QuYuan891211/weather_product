@@ -8,18 +8,20 @@
 # @File    : ZcqybService.py
 # @Software: PyCharm
 import os
-from background.FTPManager import FTPManager
-from pip._internal.utils import logging
+import FTPManager
 from apscheduler.schedulers.blocking import BlockingScheduler
+
 global config_path
 config_path = r'E:\projects\pycharm\weather_product\Background\docs\ZcqybConfig.ini'
-global section_neargoos
+global section_ftp
 section_ftp = 'FTP'
-global section_mysql
+global section_local
 section_local = 'LOCAL'
+
+
 class ZcqybService:
     def __init__(self, config_path, section_ftp, section_local):
-        self.ftp_Manager = FTPManager(config_path, section_ftp)
+        self.ftp_Manager = FTPManager.FTPManager(config_path, section_ftp)
         self.config_path = config_path
         self.section_ftp = section_ftp
         self.section_local = section_local
@@ -53,7 +55,6 @@ class ZcqybService:
     def check_file(self, local_dir):
 
         if not os.path.exists(local_dir):
-            logging.debug('no such directory %s.'(local_dir))
             return False
         else:
             # 读入文件
@@ -84,13 +85,14 @@ class ZcqybService:
         print('总共上传' + str(count) + '个文件')
         self.ftp_Manager.close_connect()
 
-# 定时任务
+
 def scheduleTask():
     times = 0;
     # 创建调度器：BlockingScheduler
     scheduler = BlockingScheduler()
-    scheduler.add_job(task, 'interval', seconds=120, id='task1')
+    scheduler.add_job(task, 'interval', seconds=60, id='task1')
     scheduler.start()
+
 
 def task():
     zcqybService = ZcqybService(config_path, section_ftp, section_local)
