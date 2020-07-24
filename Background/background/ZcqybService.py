@@ -9,6 +9,7 @@
 # @Software: PyCharm
 import os
 import FTPManager
+import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 global config_path
@@ -83,6 +84,8 @@ class ZcqybService:
         else:
             print('没有这个路径，请检查配置文件')
         print('总共上传' + str(count) + '个文件')
+        # localtime = time.asctime(time.localtime(time.time()))
+        print(datetime.datetime.now())
         self.ftp_Manager.close_connect()
 
 
