@@ -93,7 +93,7 @@ def scheduleTask():
     times = 0;
     # 创建调度器：BlockingScheduler
     scheduler = BlockingScheduler()
-    scheduler.add_job(task, 'interval', seconds=60, id='task1')
+    scheduler.add_job(task, "cron", day_of_week="0-6", hour=6, minute=30)
     scheduler.start()
 
 
