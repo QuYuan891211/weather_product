@@ -59,7 +59,7 @@ class FTPManager:
         :return: 配置文件类
         """
         config = configparser.ConfigParser()
-        config.read(self.config_path, encoding='UTF-8')
+        config.read(self.config_path, encoding='UTF-8-sig')
         return config
 
     def close_connect(self):

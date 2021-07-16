@@ -73,17 +73,21 @@ class HdqxService:
             for f in files:
                 if '.txt' == os.path.splitext(f)[1] and 18 == len(f):
                     local_path = local_dir + f
-                    new_filename = 'NMF_TRF_RI_CSDT_' + f[6:14] + '00_072h_OCE.txt'
-                    remote_path = remote_dir + new_filename
-                    is_success = self.ftp_Manager.upload_file(local_path, remote_path)
-                    if is_success:
-                        print('成功上传: ' + f)
-                        count = count + 1
-                    else:
-                        print('上传失败：' + f)
+                    fileDate = f[6:14]
+                    now = datetime.date.today()
+                    time_str = datetime.datetime.strftime(now, '%Y%m%d')
+                    if time_str == fileDate:
+                        new_filename = 'NMF_TRF_RI_CSDT_' + fileDate + '00_072h_OCE.txt'
+                        remote_path = remote_dir + new_filename
+                        is_success = self.ftp_Manager.upload_file(local_path, remote_path)
+                        if is_success:
+                            print('成功上传: ' + f)
+                            count = count + 1
+                        else:
+                            print('上传失败：' + f)
         else:
             print('没有这个路径，请检查配置文件')
-        print('总共上传' + str(count) + '个文件')
+        print('海岛气象预报总共上传' + str(count) + '个文件')
         # localtime = time.asctime(time.localtime(time.time()))
         print(datetime.datetime.now())
         self.ftp_Manager.close_connect()
@@ -94,7 +98,7 @@ def scheduleTask():
     # 创建调度器：BlockingScheduler
     scheduler = BlockingScheduler()
     # scheduler.add_job(task, "cron", day_of_week="0-6", hour=19, minute=30)
-    scheduler.add_job(task, "cron", day_of_week="0-6", hour=20, minute=10)
+    scheduler.add_job(task, "cron", day_of_week="0-6", coalesce=True, misfire_grace_time=3600, hour=20, minute=20)
     # scheduler.add_job(task, 'interval', seconds=120, id='task1')
 
     scheduler.start()

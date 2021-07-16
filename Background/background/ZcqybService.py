@@ -73,17 +73,21 @@ class ZcqybService:
             for f in files:
                 if '.doc' == os.path.splitext(f)[1] or '.docx' == os.path.splitext(f)[1]:
                     local_path = local_dir + f
-                    new_filename = 'NMF_MCP_POMET_CSDT_' + f[5:13] + '00_028d_OCE.doc'
-                    remote_path = remote_dir + new_filename
-                    is_success = self.ftp_Manager.upload_file(local_path, remote_path)
-                    if is_success:
-                        print('成功上传: ' + f)
-                        count = count + 1
-                    else:
-                        print('上传失败：' + f)
+                    fileDate = f[5:13]
+                    now = datetime.date.today()
+                    time_str = datetime.datetime.strftime(now, '%Y%m%d')
+                    if time_str == fileDate:
+                        new_filename = 'NMF_MCP_POMET_CSDT_' + fileDate + '00_028d_OCE.doc'
+                        remote_path = remote_dir + new_filename
+                        is_success = self.ftp_Manager.upload_file(local_path, remote_path)
+                        if is_success:
+                            print('成功上传: ' + f)
+                            count = count + 1
+                        else:
+                            print('上传失败：' + f)
         else:
             print('没有这个路径，请检查配置文件')
-        print('总共上传' + str(count) + '个文件')
+        print('海洋环境趋势预测指导产品总共上传' + str(count) + '个文件')
         # localtime = time.asctime(time.localtime(time.time()))
         print(datetime.datetime.now())
         self.ftp_Manager.close_connect()
@@ -93,7 +97,9 @@ def scheduleTask():
     times = 0;
     # 创建调度器：BlockingScheduler
     scheduler = BlockingScheduler()
-    scheduler.add_job(task, "cron", day_of_week="0-6", hour=6, minute=30)
+    scheduler.add_job(task, "cron", day_of_week="0-6", hour=20, minute=30)
+    # scheduler.add_job(task, 'interval', seconds=120, id='task1')
+
     scheduler.start()
 
 
